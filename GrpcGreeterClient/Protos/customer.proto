@@ -1,0 +1,47 @@
+syntax = "proto3";
+
+option csharp_namespace = "GrpcGreeterClient";
+
+package customer;
+
+service Customer {
+  rpc GetCustomer (CustomerRequest) returns (CustomerModel);
+  rpc GetAllCustomers (CustomerRequest) returns (stream CustomerModel);
+  rpc AddCustomer (CustomerModel) returns (CustomerAddedResult);
+  rpc AddCustomers (stream CustomerModel) returns (CustomerAddedResult);
+  // Unary
+  //   rpc UnaryCall (ExampleRequest) returns (ExampleResponse);
+  // Server streaming
+  //   rpc StreamingFromServer (ExampleRequest) returns (stream ExampleResponse);
+  // Client streaming
+  //   rpc StreamingFromClient (stream ExampleRequest) returns (ExampleResponse);
+  // Bi-directional streaming
+  //   rpc StreamingBothWays (stream ExampleRequest) returns (stream ExampleResponse);
+}
+
+message CustomerRequest {
+    int32 id = 1;
+}
+
+message CustomerModel {
+    int32 id = 1;
+    string name = 2;
+
+    message PhoneNumber {
+        string value = 1;
+    }
+
+    repeated PhoneNumber phone_numbers = 3;
+    CustomerType customer_type = 4;
+    int64 modifiedTime = 5;
+}
+
+enum CustomerType {
+    FIRST_LEVEL = 0;
+	SECOND_LEVEL = 1;
+	LAST_LEVEL = 2;
+}
+
+message CustomerAddedResult {
+    bool is_success = 1;
+}

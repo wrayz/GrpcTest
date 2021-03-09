@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Net.Http;
+using System.Text.Json;
 using Grpc.Net.Client;
 
 namespace GrpcGreeterClient
@@ -13,11 +14,12 @@ namespace GrpcGreeterClient
 
 
             // using var channel = GrpcChannel.ForAddress("https://localhost:5001");
-            var channel = GrpcChannel.ForAddress("https://localhost:5001", new GrpcChannelOptions { HttpHandler = httpHandler });
-            var client = new Greeter.GreeterClient(channel);
-            var reply = await client.SayHelloAsync(new HelloRequest { Name = "GreeterClient" });
+            var channel = GrpcChannel.ForAddress("https://localhost:5001/", new GrpcChannelOptions { HttpHandler = httpHandler });
+            var client = new Customer.CustomerClient(channel);
+            var reply = await client.GetCustomerAsync(new CustomerRequest { Id = 1 });
 
-            System.Console.WriteLine("Greeting: " + reply.Message);
+            Console.WriteLine(JsonSerializer.Serialize(reply, new JsonSerializerOptions { WriteIndented = true }));
+
             System.Console.WriteLine("Press any key to exit...");
             Console.ReadKey();
         }
