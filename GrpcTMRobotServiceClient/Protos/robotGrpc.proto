@@ -1,0 +1,687 @@
+syntax = "proto3";
+
+option csharp_namespace = "GrpcTMRobotServiceClient";
+
+package tmRobot;
+import "google/protobuf/wrappers.proto";
+
+// The greeting service definition.
+service TMRobot {
+
+  rpc GetTMRobots (GetTMRobotRequest) returns (GetTMRobotResponse);
+  rpc GetTMRobotsByIP ( GetTMRobotByIPRequest) returns (GetTMRobotByIPResponse);
+  rpc GetTMRobotDetails( GetTMRobotDetailRequest) returns (GetTMRobotDetailResponse);
+  rpc GetTMRobotDetailsByIP ( GetTMRobotDetailByIPRequest) returns (GetTMRobotDetailByIPResponse);
+  rpc GetTMRobotVariables ( GetTMRobotVariablesRequest) returns (GetTMRobotVariablesResponse);
+  rpc GetTMRobotVariableValue( GetTMRobotVariableValueRequest) returns (GetTMRobotVariableValueResponse);
+  rpc GetTMRobotControl( GetTMRobotControlRequest) returns (GetTMRobotControlResponse);
+  rpc ReleaseTMRobotControl( ReleaseTMRobotControlRequest) returns (ReleaseTMRobotControlResponse);
+  rpc ChangeRobotDefaultProject( ChangeRobotDefaultProjectRequest) returns (ChangeRobotDefaultProjectResponse);
+  rpc ChangeRobotExecution( ChangeRobotExecutionRequest) returns (ChangeRobotExecutionResponse);
+  rpc SetRobotVariable( SetRobotVariableRequest) returns (SetRobotVariableResponse);
+  rpc PullProject( PullProjectRequest) returns (PullProjectResponse);
+  rpc DownloadProject( DownloadProjectRequest) returns (stream DownloadProjectResponse){}
+  rpc PushProject( PushProjectRequest) returns (PushProjectResponse);
+  rpc UploadProject(stream UploadProjectRequest) returns (UploadProjectResponse);
+}
+
+enum TMRobotExcution {
+	Play = 0;
+	Pause = 1;
+	Stop = 2;
+	SpeedUP =3;
+	SpeedDown =4;
+}
+enum TMRobotStatus {
+	IsPlay = 0; 
+	IsError = 1;
+	IsPause = 2;
+	IsStop = 3;
+	IsEStop = 4;
+	IsOffLine = 5;
+}
+
+enum Mode {
+	UnKnown = 0;
+	AutoMode = 1; 
+	ManualMode = 2;
+}
+enum TMRobotLIghtColor
+{
+	Lightoff = 0;
+	SolidRed = 1;
+	FlashingRed = 2;
+	SolidBlue = 3;
+	FlashingBlue = 4;
+	SolidGreen = 5;
+	FlashingGreen = 6;
+	AlternatingBlueRed = 9;//Auto Mode error
+	AlternatingGreenRed = 10;//Manual  Mode error
+	AlternatingPurpleGreen = 13;
+	AlternatingPurpleBlue = 14;
+	AlternatingWhiteGreen = 17;
+	AlternatingWhiteBlue = 18;
+	Flashinglightblue = 19;
+}
+
+message GetTMRobotRequest
+{
+	repeated string TMRobotNames = 1;
+}
+message GetTMRobotResponse
+{
+	repeated TMRobotInfo TMRobotInfos = 1;
+}
+
+message GetTMRobotByIPRequest
+{
+	repeated string TMRobotIP = 1;
+}
+message GetTMRobotByIPResponse
+{
+	repeated TMRobotInfo TMRobotInfos = 1;
+}
+
+message GetTMRobotDetailRequest
+{
+	repeated string TMRobotName = 1;
+}
+message GetTMRobotDetailResponse
+{
+	repeated TMRobotInfoDetail TMRobotInfoDetail = 1;
+}
+
+message GetTMRobotDetailByIPRequest
+{
+	repeated string TMRobotIP = 1;
+}
+message GetTMRobotDetailByIPResponse
+{
+	repeated TMRobotInfoDetail TMRobotInfoDetail = 1;
+}
+
+message GetTMRobotVariablesRequest
+{
+    string TMRobotName = 1;
+	string ProjectName = 2;
+	repeated string variableNames = 3;
+}
+message GetTMRobotVariablesResponse
+{
+    repeated TMRobotVariable TMRobotVariables = 1;
+}
+
+message GetTMRobotVariableValueRequest
+{
+	string TMRobotName = 1;
+	string ProjectName = 2;
+	repeated string variableNames = 3;
+}
+message GetTMRobotVariableValueResponse
+{
+	repeated TMRobotVariableValue TMRobotVariableValues = 1;
+}
+
+message GetTMRobotControlRequest
+{
+	repeated string TMRobotNames = 1;
+}
+message GetTMRobotControlResponse
+{
+	bool Success = 1;
+	string Message = 2;
+}
+
+message ReleaseTMRobotControlRequest
+{
+	repeated string TMRobotNames = 1;
+}
+message ReleaseTMRobotControlResponse
+{
+	bool Success = 1;
+	string Message = 2;
+}
+
+message ChangeRobotDefaultProjectRequest
+{
+	map<string, string> RobotProjectMap = 1;
+}
+message ChangeRobotDefaultProjectResponse
+{
+	bool Success = 1;
+	string Message = 2;
+}
+
+message ChangeRobotExecutionRequest
+{
+	map<string, TMRobotExcution> RobotExcutionMap = 1;
+}
+message ChangeRobotExecutionResponse
+{
+	bool Success = 1;
+	string Message = 2;
+}
+
+message SetRobotVariableRequest
+{
+	string TMRobotName = 1;
+	string ProjectName =2;
+	string VariableName = 3;
+	string Value = 4;
+}
+message SetRobotVariableResponse
+{
+	bool Success = 1;
+	string Message = 2;
+}
+
+message PullProjectRequest
+{
+	string TMRobotName = 1;
+	string ProjectName = 2;
+}
+message PullProjectResponse
+{
+	bool Success = 1;
+	string Message = 2;
+}
+
+message DownloadProjectRequest
+{
+	string TMRobotName = 1;
+	string ProjectName = 2;
+}
+message DownloadProjectResponse
+{
+	FileInfo Fileinfo = 1;
+}
+
+message PushProjectRequest
+{
+	string TMRobotName = 1; 
+	string ProjectName = 2;
+}
+message PushProjectResponse
+{
+	bool Success = 1;
+	string Message = 2;
+}
+
+message UploadProjectRequest
+{
+	FileInfo FileInfo = 1;
+} 
+message UploadProjectResponse
+{
+	bool Success = 1;
+	string Message = 2;
+} 
+
+message TMRobotInfo
+{
+	string TMRobotName = 1;//7561~7570
+	string IP =2;
+	Mode Mode = 3; // 1: AutoMode  2:ManulMode
+	string ControlBoxSN = 4;
+	string Model =5 ;// 7571~7579
+	google.protobuf.BoolValue EnabledHMIControl =6;
+	bool HasRightControl =7;
+	bool EnabledAutoRemoteMode = 8;
+	bool EnabledSpeedControl = 9;
+	TMRobotLIghtColor TMRobotLIghtColor = 10;
+	TMRobotStatus TMRobotStatus =11;
+	int32 ProjectSpeed =12;
+	string HMIVersion =13;
+	string DefaultProjectName = 14;
+	string StatusUpdateTime = 15;
+	bool IsSubscribed = 16;
+    string ErrorCode = 17;
+}
+message TMRobotProject
+{
+	string TMRobotName = 1;
+	string ProjectName = 2;
+}
+message TMRobotVariable
+{
+	string Name = 1;
+	string ProjectName = 2;
+	bool IsLocalVariable =3;
+	bool IsSubscribe = 4;
+}
+message TMRobotVariableValue
+{
+	string TMRobotName = 1;
+	string ProjectName = 2;
+	string vType = 3;
+	string vName = 4;
+	string Value = 5;
+	string PastValue= 6;
+}
+message TMRobotInfoDetail
+{
+	TMRobotInfo TMRobotInfo =1 ;
+	RobotStatus2 RobotStatus2 = 2;
+	ControlBoxDIO ControlBoxDIO = 3;
+	EndModule EndModule =4;
+	ControlBoxAIO ControlBoxAIO =5;
+	ExternalModule ExternalModule =6;
+	SafetyConnector SafetyConnector =7;
+	RobotCoordinateCurrentBaseWithoutTool RobotCoordinateCurrentBaseWithoutTool = 8;
+	RobotCoordinateCurrentBaseWithTool RobotCoordinateCurrentBaseWithTool = 9;
+	RobotCoordinateJoint RobotCoordinateJoint = 10;
+	RobotCoordinateRobotBaseWithoutTool RobotCoordinateRobotBaseWithoutTool =11;
+	RobotCoordinateRobotBaseWithTool RobotCoordinateRobotBaseWithTool =12;
+	RobotCoordinateTouchStopCurrentBaseWithoutTool RobotCoordinateTouchStopCurrentBaseWithoutTool =13;
+	RobotCoordinateTouchStopCurrentBaseWithTool RobotCoordinateTouchStopCurrentBaseWithTool =14;
+	RobotCoordinateTouchStopJoint RobotCoordinateTouchStopJoint =15;
+	RobotCoordinateTouchStopRobotBaseWithoutTool RobotCoordinateTouchStopRobotBaseWithoutTool =16;
+	RobotCoordinateTouchStopRobotBaseWithTool RobotCoordinateTouchStopRobotBaseWithTool =17;
+	TCPValue TCPValue =18;
+	EndModuleButton EndModuleButton =19;
+	StickStatusPressed StickStatusPressed =20;
+	TCPSpeed TCPSpeed =21;
+	TCPForce TCPForce =22;
+	JointTorque JointTorque =23;
+	JointSpeed JointSpeed =24;
+	JointCurrent JointCurrent =25;
+	JointTemperature JointTemperature =26;
+	CurrentBase CurrentBase =27;
+	SafetyStopCriteria SafetyStopCriteria =28;
+	CollaborativeMode CollaborativeMode =29;
+	RunningTimer RunningTimer =30;
+	UpTimer UpTimer =31;
+	Others1 Others1 =32;
+	Others2 Others2 =33;
+}
+
+message FileInfo
+{
+	string FileName = 1;
+	int32 FileSize = 2;
+	int32 SendCount = 3;
+	string Encode = 4;
+	bytes Content = 5;
+	string Chacksum = 6;
+}
+
+message RobotStatus2
+{
+	bool AutoRemoteModeEnable =1;
+	bool AutoRemoteModeActive =2;
+	bool SpeedAdjustment =3;
+}
+message ControlBoxDIO
+{
+	bool DO0 =1;
+	bool DO1 =2;
+	bool DO2 =3;
+	bool DO3 =4;
+	bool DO4 =5;
+	bool DO5 =6;
+	bool DO6 =7;
+	bool DO7 =8;
+	bool DO8 =9;
+	bool DO9 =10;
+	bool DO10 =11;
+	bool DO11 =12;
+	bool DO12 =13;
+	bool DO13 =14;
+	bool DO14 =15;
+	bool DO15 =16;
+	bool DI0 =17;
+	bool DI1 =18;
+	bool DI2 =19;
+	bool DI3 =20;
+	bool DI4 =21;
+	bool DI5 =22;
+	bool DI6 =23;
+	bool DI7 =24;
+	bool DI8 =25;
+	bool DI9 =26;
+	bool DI10 =27;
+	bool DI11 =28;
+	bool DI12 =29;
+	bool DI13 =30;
+	bool DI14 =31;
+	bool DI15 =32;
+}
+message EndModule
+{
+	bool DI0 =1;
+	bool DI1 =2;
+	bool DI2 =3;
+	bool DI3 =4;
+	bool DO0 =5;
+	bool DO1 =6;
+	bool DO2 =7;
+	bool DO3 =8;
+	float AI0 =9;
+}
+message ControlBoxAIO
+{
+	float AO0 =1;
+	float AI0 =2;
+	float AI1 =3;
+}
+message ExternalModule
+{
+	float AO =1;
+	float AI =2;
+	bool DO =3;
+	bool DI =4;
+}
+message SafetyConnector
+{
+	bool SO0 =1;
+	bool SO1 =2;
+	bool SO2 =3;
+	bool SO3 =4;
+	bool SO4 =5;
+	bool SI0 =6;
+	bool SI1 =7;
+	bool SI2 =8;
+	bool SI3 =9;
+	bool SI4 =10;
+}
+message RobotCoordinateCurrentBaseWithoutTool
+{
+	float XBasewithouttool =1;
+	float YBasewithouttool =2;
+	float ZBasewithouttool =3;
+	float RxBasewithouttool =4;
+	float RyBasewithouttool =5;
+	float RzBasewithouttool =6;
+}
+message RobotCoordinateCurrentBaseWithTool
+{
+	float XBasewithtool =1;
+	float YBasewithtool =2;
+	float ZBasewithtool =3;
+	float RxBasewithtool =4;
+	float RyBasewithtool =5;
+	float RzBasewithtool =6;
+}
+message RobotCoordinateJoint
+{
+	float Joint1 =1;
+	float Joint2 =2;
+	float Joint3 =3;
+	float Joint4 =4;
+	float Joint5=5;
+	float Joint6 =6;
+}
+message RobotCoordinateRobotBaseWithoutTool
+{
+
+	float XBasewithtool =1;
+	float YBasewithtool =2;
+	float ZBasewithtool =3;
+	float RxBasewithtool =4;
+	float RyBasewithtool =5;
+	float RzBasewithtool =6;
+}
+message RobotCoordinateRobotBaseWithTool
+{
+
+	float XBasewithouttool =1;
+	float YBasewithouttool =2;
+	float ZBasewithouttool =3;
+	float RxBasewithouttool =4;
+	float RyBasewithouttool =5;
+	float RzBasewithouttool =6;
+}
+message RobotCoordinateTouchStopCurrentBaseWithoutTool
+{
+	float XBasewithouttool =1;
+	float YBasewithouttool =2;
+	float ZBasewithouttool =3;
+	float RxBasewithouttool =4;
+	float RyBasewithouttool =5;
+	float RzBasewithouttool =6;
+}
+message RobotCoordinateTouchStopCurrentBaseWithTool
+{
+	float XBasewithtool =1;
+	float YBasewithtool =2;
+	float ZBasewithtool =3;
+	float RxBasewithtool =4;
+	float RyBasewithtool =5;
+	float RzBasewithtool =6;
+}
+message RobotCoordinateTouchStopJoint
+{
+	float Joint1 =1;
+	float Joint2 =2;
+	float Joint3 =3;
+	float Joint4 =4;
+	float Joint5 =5;
+	float Joint6 =6;
+}
+message RobotCoordinateTouchStopRobotBaseWithoutTool
+{
+	float XBasewithtool =1;
+	float YBasewithtool =2;
+	float ZBasewithtool =3;
+	float RxBasewithtool =4;
+	float RyBasewithtool =5;
+	float RzBasewithtool =6;
+}
+message RobotCoordinateTouchStopRobotBaseWithTool
+{
+	float XBasewithouttool =1;
+	float YBasewithouttool =2;
+	float ZBasewithouttool =3;
+	float RxBasewithouttool =4;
+	float RyBasewithouttool =5;
+	float RzBasewithouttool =6;
+}
+message TCPValue
+{
+	float TCPValueX =1;
+	float TCPValueY =2;
+	float TCPValueZ =3;
+	float RX =4;
+	float RY =5;
+	float RZ =6;
+	float Mass =7;
+	float lxx =8;
+	float lyy =9;
+	float lzz =10;
+	float MasscenterFramesX =11;
+	float MasscenterFramesY =12;
+	float MasscenterFramesZ =13;
+	float MasscenterFramesRX =14;
+	float MasscenterFramesRY =15;
+	float MasscenterFramesRZ =16;
+}
+message EndModuleButton
+{
+	bool FreeBot =1;
+}
+message StickStatusPressed
+{
+	bool PowerButton =1;
+	bool Mode =2;
+	bool PlayPause =3;
+	bool Stop =4;
+	bool StickPlus =5;
+	bool StickMinus =6;
+}
+message TCPSpeed
+{
+	float X =1;
+	float Y =2;
+	float Z =3;
+	float RX =4;
+	float RY =5;
+	float RZ =6;
+	float Speed =7;
+}
+message TCPForce
+{
+	float FX =1;
+	float FY =2;
+	float FZ =3;
+	float F3D =4;
+}
+message JointTorque
+{
+	float Joint1 =1;
+	float Joint2 =2;
+	float Joint3 =3;
+	float Joint4 =4;
+	float Joint5 =5;
+	float Joint6 =6;
+}
+message JointSpeed
+{
+	float Joint1 =1;
+	float Joint2 =2;
+	float Joint3 =3;
+	float Joint4 =4;
+	float Joint5 =5;
+	float Joint6 =6;
+}
+message JointCurrent
+{
+	float Joint1 =1;
+	float Joint2 =2;
+	float Joint3 =3;
+	float Joint4 =4;
+	float Joint5 =5;
+	float Joint6 =6;
+}
+message JointTemperature
+{
+	float Joint1 =1;
+	float Joint2 =2;
+	float Joint3 =3;
+	float Joint4 =4;
+	float Joint5 =5;
+	float Joint6 =6;
+}
+message CurrentBase
+{
+	float X =1;
+	float Y =2;
+	float Z =3;
+	float RX =4;
+	float RY =5;
+	float RZ =6;
+	
+}
+message SafetyStopCriteria
+{
+	float TCPSpeed =1;
+	float TCPSpeedUnderHandGuideMode =2;
+	float TCPForce =3;
+	float Joint1Speed =4;
+	float Joint2Speed =5;
+	float Joint3Speed =6;
+	float Joint4Speed =7;
+	float Joint5Speed =8;
+	float Joint6Speed =9;
+	float Joint1Torque =10;
+	float Joint2Torque =11;
+	float Joint3Torque =12;
+	float Joint4Torque =13;
+	float Joint5Torque =14;
+	float Joint6Torque =15;
+	float MinJoint1Position =16;
+	float MaxJoint1Position = 17;
+	float MinJoint2Position =18;
+	float MaxJoint2Position =19;
+	float MinJoint3Position =20;
+	float MaxJoint3Position =21;
+	float MinJoint4Position =22;
+	float MaxJoint4Position =23;
+	float MinJoint5Position =24;
+	float MaxJoint5Position =25;
+	float MinJoint6Position =26;
+	float MaxJoint6Position =27;
+	
+}
+message CollaborativeMode
+{
+	float TCPSpeed =1;
+	float TCPSpeedUnderHandGuideMode =2;
+	float TCPForce =3;
+	float Joint1Speed =4;
+	float Joint2Speed =5;
+	float Joint3Speed =6;
+	float Joint4Speed =7;
+	float Joint5Speed =8;
+	float Joint6Speed =9;
+	float Joint1Torque =10;
+	float Joint2Torque =11;
+	float Joint3Torque =12;
+	float Joint4Torque =13;
+	float Joint5Torque =14;
+	float Joint6Torque =15;
+	float MotionSpeed =16;
+	float PTPSpeed =17;
+	float MinimumPossibleContactArea =18;
+	bool GSensor =19;
+	int32  DecelerationTime =20;
+}
+message RunningTimer
+{
+	int32 Day =1;
+	int32 Hour =2;
+	int32 Minute =3;
+	int32 Second =4;
+}
+message UpTimer
+{
+	int32 Day =1;
+	int32 Hour =2;
+	int32 Minute =3;
+	int32 Second =4;
+}
+message Others1
+{
+	string CurrentTime =1;
+	string LastErrorTime =2;
+	int32 IPCConnectNumber =3;
+
+}
+message Others2
+{
+	float ControllerTemperature =1;
+	float RobotVoltage =2;
+	float RobotPowerConsumption =3;
+	float RobotCurrent =4;
+	float ControlBoxIOCurrent =5;
+	float EndModuleIOCurrent =6;
+	float Sreserve1 =7;
+	float Sreserve2 =8;
+	float Sreserve3 =9;
+	float Sreserve4 =10;
+	float Sreserve5 =11;
+	float Sreserve6 =12;
+	float Sreserve7 =13;
+	float Sreserve8 =14;
+	float Sreserve9 =15;
+	float Sreserve10 =16;
+	float Sreserve11 =17;
+	float Sreserve12 =18;
+	float Sreserve13 =19;
+	float Sreserve14 =20;
+	float Sreserve15 =21;
+	float Sreserve16 =22;
+	float Sreserve17 =23;
+	float Sreserve18 =24;
+	float Sreserve19 =25;
+	float Sreserve20 =26;
+	float Sreserve21 =27;
+	float Sreserve22 =28;
+	float Sreserve23 =29;
+	float Sreserve24 =30;
+	float Sreserve25 =31;
+	float Sreserve26 =32;
+	float Sreserve27 =33;
+	float Sreserve28 =34;
+	float Sreserve29 =35;
+	float Sreserve30 =36;
+}
